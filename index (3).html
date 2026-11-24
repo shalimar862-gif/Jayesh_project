@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BhashaBridge Academy – Technical study translator</title>
+<meta name="description" content="Translate English technical study material into Hindi and Marathi. Works offline with a built-in dictionary, flashcards and saved words.">
+<meta name="theme-color" content="#12304a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2312304a'/%3E%3Cpath d='M8 42h48M14 42c0-14 8-20 18-20s18 6 18 20' fill='none' stroke='%23ffb04a' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f5;--card:#fff;--ink:#12304a;--text:#1d2b3a;--mute:#5d6b7b;--line:#d6dee6;--acc:#0b6e6e;--accs:#dff1f0;--hi:#fff0cc;--sf:#e07b00;--hero:#12304a;--sh:0 1px 2px #12304a14,0 8px 24px #12304a10}
+:root[data-theme=dark]{--bg:#0e141b;--card:#17212c;--ink:#e9eef3;--text:#dbe3ea;--mute:#98a6b5;--line:#2a3846;--acc:#52c7c4;--accs:#16363a;--hi:#3a3016;--sf:#ffb04a;--hero:#0a2236;--sh:0 1px 2px #0006,0 8px 24px #0004}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.65 Hind,"Noto Sans Devanagari","Segoe UI",Mangal,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.brand{font-family:Fraunces,Georgia,serif;color:var(--ink)}
+header{background:var(--hero);color:#fff;position:relative;overflow:hidden}
+.top{max-width:1100px;margin:0 auto;padding:18px 18px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;font-weight:700;font-size:22px;text-decoration:none}
+.brand svg{width:40px;height:40px;flex:none}
+.tools{display:flex;gap:8px;align-items:center}
+#net{font-size:13px;padding:4px 12px;border-radius:99px;background:#ffffff1f;display:flex;align-items:center;gap:7px}
+#net::before{content:"";width:8px;height:8px;border-radius:50%;background:#5ee09a}
+#net.off::before{background:var(--sf)}
+.ic{border:1px solid #ffffff40;background:none;color:#fff;border-radius:99px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}
+.ic:hover{background:#ffffff1f}
+.hero{max-width:1100px;margin:0 auto;padding:26px 18px 34px;display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center}
+.hero h1{margin:0 0 8px;color:#fff;font-size:clamp(28px,4.6vw,44px);line-height:1.12;font-weight:700}
+.hero p{margin:0;color:#ffffffc8;max-width:46ch}
+.span{display:flex;align-items:center;gap:10px;justify-content:center}
+.span .t{background:#ffffff14;border:1px solid #ffffff2e;border-radius:14px;padding:12px 16px;font-family:Fraunces,Georgia,serif;font-size:20px;text-align:center;min-width:92px}
+.span .t small{display:block;font:12px Hind,sans-serif;opacity:.7}
+.span svg{width:88px;height:44px;flex:none}
+nav{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav .in{max-width:1100px;margin:0 auto;padding:0 12px;display:flex;gap:2px;overflow-x:auto}
+nav button{border:0;background:none;color:var(--mute);font:600 16px Hind,sans-serif;padding:14px 16px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+nav button:hover{color:var(--ink)}
+nav button[aria-selected=true]{color:var(--acc);border-color:var(--acc)}
+.badge{background:var(--sf);color:#1b1200;border-radius:99px;font-size:12px;padding:1px 8px;margin-left:6px}
+main{max-width:1100px;margin:0 auto;padding:22px 16px 70px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--sh)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+select,input[type=search],textarea{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text)}
+textarea{width:100%;resize:vertical;min-height:130px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:var(--card);color:var(--mute);font:600 15px Hind,sans-serif;padding:8px 16px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--acc);color:#fff}
+.b{font:600 15px Hind,sans-serif;padding:9px 16px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer}
+.b:hover{border-color:var(--acc)}.b:disabled{opacity:.45;cursor:not-allowed}
+.b.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.b.s{padding:5px 11px;font-size:14px}
+:focus-visible{outline:3px solid var(--sf);outline-offset:2px}
+.muted{color:var(--mute)}.hidden{display:none!important}
+.cnt{margin-left:auto;font-size:14px;color:var(--mute)}
+.out{min-height:84px;white-space:pre-wrap;font-size:19px;line-height:1.8;margin-top:8px}
+.out .w{cursor:pointer;border-radius:4px;background:var(--accs);padding:0 3px}
+.out .w:hover{background:var(--hi)}
+.out .miss{opacity:.65;text-decoration:underline dotted}
+h2{font-size:24px;margin:26px 0 6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px;margin-top:10px}
+.hit{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px;display:flex;flex-direction:column;gap:2px}
+.hit b{font:700 19px Fraunces,Georgia,serif;color:var(--ink)}
+.hit p{margin:0;font-size:16px;line-height:1.5}
+.hit .ac{display:flex;gap:8px;margin-top:8px}
+.lbl{color:var(--mute);font-size:13px;margin-right:6px}
+.add{display:grid;grid-template-columns:repeat(3,1fr) auto;gap:10px}
+.add input{width:100%}
+.fc{max-width:520px;margin:10px auto;text-align:center}
+.face{min-height:230px;border:2px solid var(--line);border-radius:20px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;cursor:pointer;box-shadow:var(--sh);font-size:21px}
+.face.back{background:var(--accs);border-color:var(--acc)}
+.face .en{font:700 34px Fraunces,Georgia,serif;color:var(--ink)}
+.face p{margin:4px 0}
+#pop{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:4px solid var(--sf);padding:16px 20px 20px;box-shadow:0 -10px 30px #0004;z-index:20;transform:translateY(105%);transition:transform .2s}
+#pop.show{transform:none}
+#pop .in{max-width:1100px;margin:0 auto}
+#pop h3{margin:0 0 4px;font-size:22px}
+#pop p{margin:2px 0}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);background:var(--ink);color:var(--card);padding:10px 18px;border-radius:99px;font-size:15px;opacity:0;pointer-events:none;transition:.2s;z-index:30}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:0 16px 40px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.span{justify-content:flex-start}.add{grid-template-columns:1fr}.cnt{width:100%;margin:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media print{header,nav,.bar,#pop,.ac{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <a class="brand" href="./" aria-label="BhashaBridge Academy home">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#ffffff1c"/><path d="M8 44h48M14 44c0-15 8-21 18-21s18 6 18 21" fill="none" stroke="#ffb04a" stroke-width="5" stroke-linecap="round"/><path d="M32 23v21M23 28v16M41 28v16" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+      BhashaBridge Academy
+    </a>
+    <div class="tools"><span id="net">Checking connection</span><button class="ic" id="theme" aria-label="Change colour theme">Theme: Auto</button></div>
+  </div>
+  <div class="hero">
+    <div>
+      <h1>Study technical subjects in the language you think in.</h1>
+      <p>Paste English notes, get Hindi or Marathi, tap any term for its meaning, and revise with flashcards. Your words stay on your device.</p>
+    </div>
+    <div class="span" aria-hidden="true">
+      <div class="t">algorithm<small>English</small></div>
+      <svg viewBox="0 0 88 44"><path d="M2 38h84M8 38c0-22 14-30 36-30s36 8 36 30" fill="none" stroke="#ffb04a" stroke-width="4" stroke-linecap="round"/></svg>
+      <div class="t">क्रमबद्ध<small>Hindi · मराठी</small></div>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="Sections"><div class="in" role="tablist">
+  <button role="tab" data-t="tr" aria-selected="true">Translator</button>
+  <button role="tab" data-t="dict" aria-selected="false">Dictionary</button>
+  <button role="tab" data-t="words" aria-selected="false">My words<span class="badge" id="sc">0</span></button>
+  <button role="tab" data-t="fc" aria-selected="false">Flashcards</button>
+</div></nav>
+
+<main>
+  <section id="tr">
+    <div class="card">
+      <div class="bar" style="margin-top:0">
+        <span class="muted">Translate English to</span>
+        <div class="seg" role="group" aria-label="Target language">
+          <button id="lhi" aria-pressed="true">हिन्दी</button><button id="lmr" aria-pressed="false">मराठी</button>
+        </div>
+        <span class="cnt" id="cnt">0 characters</span>
+      </div>
+      <textarea id="src" placeholder="Type or paste English text here. Press Ctrl + Enter to translate."></textarea>
+      <div class="bar">
+        <button class="b p" id="go">Translate</button>
+        <button class="b" id="hear">Listen to English</button>
+        <button class="b" id="paste">Paste</button>
+        <button class="b" id="clear">Clear</button>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="bar" style="margin:0"><b class="brand" style="font-size:18px;color:var(--ink)">Translation</b>
+        <button class="b s" id="spk" disabled>Listen</button><button class="b s" id="copy" disabled>Copy</button>
+      </div>
+      <div class="out" id="out" aria-live="polite"><span class="muted">Your translation appears here.</span></div>
+      <p class="muted" id="note" style="margin:8px 0 0;font-size:15px"></p>
+    </div>
+    <h2>Add your own word</h2>
+    <div class="card">
+      <div class="add">
+        <input id="ke" type="search" placeholder="English term" aria-label="English term">
+        <input id="kh" type="search" placeholder="हिन्दी अर्थ" aria-label="Hindi meaning">
+        <input id="km" type="search" placeholder="मराठी अर्थ" aria-label="Marathi meaning">
+        <button class="b p" id="add">Add word</button>
+      </div>
+      <p class="muted" id="addn" style="margin:8px 0 0;font-size:15px"></p>
+    </div>
+  </section>
+
+  <section id="dict" class="hidden">
+    <div class="bar" style="margin-top:0"><input id="q" type="search" placeholder="Search a technical term" aria-label="Search dictionary" style="flex:1;min-width:220px"><span class="muted" id="dc"></span></div>
+    <div class="grid" id="hits"></div>
+  </section>
+
+  <section id="words" class="hidden">
+    <div class="bar" style="margin-top:0">
+      <span class="muted">Saved for revision. They stay on this device.</span>
+      <button class="b s" id="exp" style="margin-left:auto">Export</button>
+      <label class="b s" style="margin:0">Import<input id="imp" type="file" accept="application/json" hidden></label>
+      <button class="b s" id="wipe">Remove all</button>
+    </div>
+    <div class="grid" id="saved"></div>
+  </section>
+
+  <section id="fc" class="hidden">
+    <div class="fc">
+      <p class="muted" id="fcinfo"></p>
+      <div class="face" id="face" role="button" tabindex="0" aria-label="Flip card"></div>
+      <div class="bar" style="justify-content:center">
+        <button class="b" id="fprev">Previous</button><button class="b" id="fflip">Flip</button><button class="b p" id="fnext">Next</button><button class="b" id="fshuf">Shuffle</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="pop" role="dialog" aria-live="polite"><div class="in"></div></div>
+<div id="toast" role="status"></div>
+<footer>BhashaBridge Academy · Machine translation can be wrong, so always check technical terms.</footer>
+
+<script>
+const G={
+algorithm:["क्रमबद्ध निर्देश-विधि","टप्प्याटप्प्याची कार्यपद्धती"],input:["निवेश (दिया गया डेटा)","निवेश (दिलेला डेटा)"],output:["निर्गत (प्राप्त परिणाम)","निर्गत (मिळणारा निकाल)"],process:["प्रक्रिया करना","प्रक्रिया करणे"],variable:["चर","चल"],value:["मान","किंमत"],memory:["स्मृति (मेमोरी)","स्मृती (मेमरी)"],data:["आँकड़े","माहिती (डेटा)"],"data type":["डेटा का प्रकार","डेटाचा प्रकार"],type:["प्रकार","प्रकार"],integer:["पूर्णांक","पूर्णांक"],string:["वर्णों का क्रम (पाठ)","अक्षरांचा क्रम (मजकूर)"],database:["आँकड़ों का संग्रह","माहितीसंच (डेटाबेस)"],table:["तालिका","तक्ता (सारणी)"],row:["पंक्ति","ओळ"],column:["स्तंभ","स्तंभ"],query:["डेटा खोजने का अनुरोध","डेटा शोधण्याची चौकशी"],sql:["डेटाबेस की भाषा","डेटाबेसची भाषा"],program:["प्रोग्राम (कार्यक्रम)","प्रोग्राम (कार्यक्रम)"],instruction:["निर्देश","सूचना"],problem:["समस्या","समस्या"],efficient:["कुशल","कार्यक्षम"],finite:["सीमित","मर्यादित"],clear:["स्पष्ट","स्पष्ट"],computer:["कंप्यूटर (संगणक)","संगणक"],language:["भाषा","भाषा"],store:["संग्रहीत करना","साठवणे"],update:["अद्यतन करना","अद्ययावत करणे"],access:["पहुँच / एक्सेस","प्रवेश / एक्सेस"],collection:["संग्रह","संग्रह"],step:["चरण","टप्पा"],
+system:["प्रणाली","प्रणाली"],software:["सॉफ़्टवेयर","सॉफ्टवेअर"],hardware:["हार्डवेयर","हार्डवेअर"],network:["नेटवर्क (जाल)","नेटवर्क (जाळे)"],internet:["इंटरनेट","इंटरनेट"],function:["फ़ंक्शन (प्रकार्य)","फंक्शन (कार्य)"],loop:["लूप (दोहराव)","लूप (पुनरावृत्ती)"],array:["ऐरे (सरणी)","ॲरे (श्रेणी)"],code:["कोड","कोड"],file:["फ़ाइल","फाइल"],error:["त्रुटि","त्रुटी"],bug:["बग (त्रुटि)","बग (दोष)"],storage:["भंडारण","साठवणूक"],processor:["प्रोसेसर","प्रोसेसर"],server:["सर्वर","सर्व्हर"],security:["सुरक्षा","सुरक्षा"],password:["पासवर्ड","पासवर्ड"],model:["मॉडल (प्रतिरूप)","मॉडेल (प्रतिरूप)"],equation:["समीकरण","समीकरण"],force:["बल","बल"],energy:["ऊर्जा","ऊर्जा"],voltage:["वोल्टेज (विभवांतर)","व्होल्टेज (विभवांतर)"],current:["धारा","विद्युतप्रवाह"],circuit:["परिपथ","परिपथ"],resistance:["प्रतिरोध","रोध"],machine:["मशीन","यंत्र"],design:["डिज़ाइन (अभिकल्प)","रचना"],analysis:["विश्लेषण","विश्लेषण"],experiment:["प्रयोग","प्रयोग"],result:["परिणाम","निकाल"],method:["विधि","पद्धत"],
+class:["क्लास (वर्ग)","क्लास (वर्ग)"],object:["ऑब्जेक्ट (वस्तु)","ऑब्जेक्ट (वस्तू)"],inheritance:["वंशागति (उत्तराधिकार)","वारसा (इनहेरिटन्स)"],polymorphism:["बहुरूपता","बहुरूपता"],encapsulation:["आवरण (डेटा छिपाना)","आवरण (डेटा लपवणे)"],abstraction:["अमूर्तन","अमूर्तता"],compiler:["संकलक (कंपाइलर)","संकलक (कंपायलर)"],interpreter:["निर्वचक (इंटरप्रेटर)","इंटरप्रिटर"],"operating system":["संचालन प्रणाली","कार्यप्रणाली (ऑपरेटिंग सिस्टम)"],kernel:["कर्नेल (प्रणाली का मूल)","कर्नल (प्रणालीचा गाभा)"],thread:["धागा (थ्रेड)","धागा (थ्रेड)"],scheduling:["अनुसूचन (शेड्यूलिंग)","वेळापत्रक (शेड्यूलिंग)"],deadlock:["गतिरोध (डेडलॉक)","कोंडी (डेडलॉक)"],cache:["कैश (अस्थायी तेज़ मेमोरी)","कॅशे (तात्पुरती जलद मेमरी)"],queue:["पंक्ति (क्यू)","रांग (क्यू)"],stack:["स्टैक (ढेर)","स्टॅक (थप्पी)"],pointer:["संकेतक (पॉइंटर)","निर्देशक (पॉइंटर)"],recursion:["पुनरावर्तन","पुनरावृत्ती (रिकर्जन)"],sorting:["क्रमबद्ध करना","क्रमवारी लावणे"],searching:["खोज","शोध"],graph:["आलेख (ग्राफ)","आलेख (ग्राफ)"],tree:["वृक्ष (ट्री)","वृक्ष (ट्री)"],node:["नोड (गाँठ)","नोड (गाठ)"],"machine learning":["मशीन लर्निंग (मशीनी सीख)","मशीन लर्निंग (यंत्रशिक्षण)"],"neural network":["तंत्रिका जाल","चेता जाळे (न्यूरल नेटवर्क)"],dataset:["डेटासेट (आँकड़ा-संग्रह)","डेटासेट (माहितीसंच)"],training:["प्रशिक्षण","प्रशिक्षण"],prediction:["पूर्वानुमान","अंदाज (भाकीत)"],accuracy:["सटीकता","अचूकता"],key:["कुंजी (की)","की (गुरुकिल्ली)"],index:["सूचकांक (इंडेक्स)","निर्देशांक (इंडेक्स)"],join:["जोड़ना (जॉइन)","जोडणे (जॉइन)"],schema:["स्कीमा (संरचना)","स्कीमा (रचना)"],normalization:["सामान्यीकरण","सामान्यीकरण"],transaction:["लेन-देन (ट्रांज़ैक्शन)","व्यवहार (ट्रान्झॅक्शन)"],process:["प्रक्रिया (प्रोसेस)","प्रक्रिया (प्रोसेस)"],resource:["संसाधन","संसाधन"],allocation:["आवंटन","वाटप"],semaphore:["सेमाफोर (संकेतक)","सेमाफोर (संकेतक)"],file:["फ़ाइल","फाइल"],"file system":["फ़ाइल प्रणाली","फाइल प्रणाली"],virtual:["आभासी (वर्चुअल)","आभासी (व्हर्च्युअल)"],"virtual memory":["आभासी स्मृति","आभासी स्मरणशक्ती (व्हर्च्युअल मेमरी)"]
+};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const sv=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch(e){return d}};
+const st=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+Object.assign(G,sv("custom",{}));
+let saved=sv("saved",[]),lang=sv("lang","hi"),cur="",curLang="hi";
+const LN={hi:"Hindi",mr:"Marathi"},VC={hi:"hi-IN",mr:"mr-IN"};
+
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2200)}
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+function btn(t,f,cls){const b=el("button","b s"+(cls?" "+cls:""),t);b.onclick=f;return b}
+function look(w){w=w.toLowerCase();for(const a of [w,w.replace(/s$/,""),w.replace(/es$/,""),w.replace(/ing$/,""),w.replace(/ed$/,"")])if(G[a])return[a,G[a]];return null}
+
+/* speech */
+function say(text,lg){
+  if(!("speechSynthesis" in window)){toast("Speech is not supported in this browser");return}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang=lg;u.rate=.9;
+  const v=speechSynthesis.getVoices().find(x=>x.lang.replace("_","-").startsWith(lg.slice(0,2)));
+  if(v)u.voice=v;else if(lg!=="en-IN")toast("No "+(lg==="hi-IN"?"Hindi":"Marathi")+" voice on this device. Meanings still work.");
+  speechSynthesis.speak(u);
+}
+
+/* saved words */
+function toggleSave(k){
+  saved=saved.includes(k)?saved.filter(x=>x!==k):[...saved,k];st("saved",saved);
+  $("#sc").textContent=saved.length;drawSaved();toast(saved.includes(k)?"Saved “"+k+"”":"Removed “"+k+"”");
+}
+function card(k,showSave){
+  const d=el("div","hit"),e=G[k];
+  d.appendChild(el("b","",k));
+  const h=el("p");h.append(el("span","lbl","हिन्दी"),e[0]);
+  const m=el("p");m.append(el("span","lbl","मराठी"),e[1]);
+  d.append(h,m);
+  if(e[2]){const n=el("p");n.append(el("span","lbl","Meaning"),e[2]);d.appendChild(n)}
+  const a=el("div","ac");
+  a.appendChild(btn("Listen",()=>say(k,"en-IN")));
+  const s=btn(saved.includes(k)?"Remove":"Save",()=>{toggleSave(k);s.textContent=saved.includes(k)?"Remove":"Save"});
+  a.appendChild(s);d.appendChild(a);return d;
+}
+function drawSaved(){
+  const b=$("#saved");b.textContent="";
+  const ks=saved.filter(k=>G[k]);
+  if(!ks.length){b.appendChild(el("p","muted","Nothing saved yet. Open the Dictionary, or tap a word in a translation, and choose Save."));return}
+  ks.forEach(k=>b.appendChild(card(k)));
+}
+
+/* dictionary */
+async function fetchWord(w){
+  const k="dw:"+w,c=sv(k,null);if(c)return c;
+  const g=async l=>{const r=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(w)+"&langpair=en|"+l);const j=await r.json();return j.responseData.translatedText};
+  const j={hi:await g("hi"),mr:await g("mr")};if(!j.hi||!j.mr)throw 0;st(k,j);return j;
+}
+function search(){
+  const q=$("#q").value.trim().toLowerCase(),b=$("#hits");b.textContent="";
+  const ks=Object.keys(G).filter(k=>!q||k.includes(q)).sort();
+  $("#dc").textContent=ks.length+" term"+(ks.length===1?"":"s");
+  ks.forEach(k=>b.appendChild(card(k)));
+  if(q&&/^[a-z -]+$/.test(q)&&!look(q)){
+    const w=el("div","hit");w.appendChild(el("p","","“"+q+"” is not in the dictionary. Get its meaning online and keep it for offline use."));
+    const a=el("div","ac");
+    a.appendChild(btn("Get meaning",async e=>{e.target.textContent="Looking up…";try{const j=await fetchWord(q);const c=sv("custom",{});c[q]=[j.hi,j.mr];st("custom",c);G[q]=[j.hi,j.mr];search()}catch(x){e.target.textContent="Needs internet. Try again"}},"p"));
+    w.appendChild(a);b.prepend(w);
+  }
+}
+
+/* translation */
+function termByTerm(text,lg){
+  const o=document.createDocumentFragment(),p=text.split(/([A-Za-z]+)/);let miss=0;
+  for(let i=0;i<p.length;i++){
+    const s=p[i];if(i%2===0){o.appendChild(document.createTextNode(s));continue}
+    let r=null,used=1;
+    if(p[i+1]===" "&&p[i+2]){r=look(s+" "+p[i+2]);if(r)used=2}
+    if(!r)r=look(s);
+    const sp=el("span");
+    if(r){sp.className="w";sp.textContent=lg==="hi"?r[1][0]:r[1][1];sp.dataset.k=r[0];sp.tabIndex=0;if(used===2)i+=2}
+    else{sp.className="miss";sp.textContent=s;miss++}
+    o.appendChild(sp);
+  }
+  return[o,miss];
+}
+async function mt(text,lg){
+  const key="tc:"+lg+":"+text,c=sv(key,null);if(c)return c;
+  const parts=text.match(/[^.!?\n]+[.!?]*\s*/g)||[text];let out="";
+  for(const p of parts){
+    if(!p.trim())continue;
+    const r=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(p.trim().slice(0,450))+"&langpair=en|"+lg);
+    const j=await r.json();
+    if(!j.responseData||!j.responseData.translatedText)throw 0;
+    out+=j.responseData.translatedText+" ";
+  }
+  out=out.trim();st(key,out);return out;
+}
+async function translate(){
+  const text=$("#src").value.trim(),out=$("#out"),note=$("#note");
+  out.textContent="";note.textContent="";
+  if(!text){note.textContent="Type or paste some English text first.";return}
+  const lg=lang,go=$("#go");go.disabled=true;go.textContent="Translating…";
+  let done=false,plain="";
+  if("Translator" in self){
+    try{
+      const a=await Translator.availability({sourceLanguage:"en",targetLanguage:lg});
+      if(a!=="unavailable"){const t=await Translator.create({sourceLanguage:"en",targetLanguage:lg});plain=await t.translate(text);note.textContent="Translated on your device by the browser. After the first language download it works offline.";done=true}
+    }catch(e){}
+  }
+  if(!done){
+    const cached=sv("tc:"+lg+":"+text,null);
+    try{
+      if(cached||navigator.onLine){plain=await mt(text,lg);note.textContent=cached?"Saved translation, so it works offline.":"Translated online and saved on this device, so the same text works offline next time.";done=true}
+    }catch(e){}
+  }
+  if(done){out.textContent=plain;cur=plain}
+  else{
+    const[f,m]=termByTerm(text,lg);out.appendChild(f);cur=out.textContent;
+    note.textContent="Offline term-by-term mode. Known terms are translated; dotted words are not in the dictionary ("+m+"). Add them below.";
+  }
+  curLang=lg;go.disabled=false;go.textContent="Translate";
+  $("#spk").disabled=false;$("#copy").disabled=false;
+}
+
+/* popover for tapped terms */
+function pop(k){
+  const e=G[k],p=$("#pop"),b=p.firstElementChild;b.textContent="";
+  b.appendChild(el("h3","",k));
+  const h=el("p");h.append(el("span","lbl","हिन्दी"),e[0]);
+  const m=el("p");m.append(el("span","lbl","मराठी"),e[1]);
+  b.append(h,m);
+  const a=el("div","ac");a.style.cssText="display:flex;gap:8px;margin-top:10px";
+  a.append(btn("Listen",()=>say(k,"en-IN")),btn(saved.includes(k)?"Remove from My words":"Save",()=>{toggleSave(k);pop(k)}),btn("Close",()=>p.classList.remove("show")));
+  b.appendChild(a);p.classList.add("show");
+}
+$("#out").addEventListener("click",e=>{const w=e.target.closest(".w");if(w)pop(w.dataset.k)});
+$("#out").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.classList.contains("w"))pop(e.target.dataset.k)});
+
+/* flashcards */
+let deck=[],ci=0,flip=false;
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildDeck(){const s=saved.filter(k=>G[k]);deck=shuffle(s.length?s:Object.keys(G));ci=0;flip=false;drawFC()}
+function drawFC(){
+  const f=$("#face"),k=deck[ci];if(!k)return;f.textContent="";f.classList.toggle("back",flip);
+  if(!flip){f.appendChild(el("div","en",k));f.appendChild(el("p","muted","Tap to see the meaning"))}
+  else{f.appendChild(el("p","","हिन्दी: "+G[k][0]));f.appendChild(el("p","","मराठी: "+G[k][1]))}
+  $("#fcinfo").textContent="Card "+(ci+1)+" of "+deck.length+(saved.filter(x=>G[x]).length?" · from My words":" · from the full dictionary");
+}
+const flipIt=()=>{flip=!flip;drawFC()},step=d=>{ci=(ci+d+deck.length)%deck.length;flip=false;drawFC()};
+$("#face").onclick=flipIt;$("#face").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flipIt()}};
+$("#fflip").onclick=flipIt;$("#fnext").onclick=()=>step(1);$("#fprev").onclick=()=>step(-1);$("#fshuf").onclick=buildDeck;
+
+/* tabs */
+function show(id){
+  $$("nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.t===id));
+  ["tr","dict","words","fc"].forEach(s=>$("#"+s).classList.toggle("hidden",s!==id));
+  $("#pop").classList.remove("show");if(id==="fc")buildDeck();
+}
+$$("nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+
+/* controls */
+function setLang(l){lang=l;st("lang",l);$("#lhi").setAttribute("aria-pressed",l==="hi");$("#lmr").setAttribute("aria-pressed",l==="mr")}
+$("#lhi").onclick=()=>setLang("hi");$("#lmr").onclick=()=>setLang("mr");setLang(lang);
+$("#go").onclick=translate;
+$("#src").addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")translate()});
+$("#src").addEventListener("input",e=>{const n=e.target.value.length;$("#cnt").textContent=n+" character"+(n===1?"":"s")});
+$("#spk").onclick=()=>say(cur,VC[curLang]);
+$("#hear").onclick=()=>{const t=$("#src").value.trim();t?say(t,"en-IN"):toast("Nothing to read yet")};
+$("#clear").onclick=()=>{$("#src").value="";$("#out").textContent="";$("#note").textContent="";$("#cnt").textContent="0 characters";$("#spk").disabled=$("#copy").disabled=true;cur="";$("#src").focus()};
+$("#paste").onclick=async()=>{try{$("#src").value=await navigator.clipboard.readText();$("#src").dispatchEvent(new Event("input"))}catch(e){toast("Allow clipboard access, or paste with Ctrl + V")}};
+$("#copy").onclick=async()=>{try{await navigator.clipboard.writeText(cur);toast("Copied")}catch(e){toast("Could not copy. Select the text and copy it manually")}};
+$("#add").onclick=()=>{
+  const k=$("#ke").value.trim().toLowerCase(),h=$("#kh").value.trim(),m=$("#km").value.trim();
+  if(!k||!h||!m){$("#addn").textContent="Fill in all three boxes.";return}
+  const c=sv("custom",{});c[k]=[h,m];st("custom",c);G[k]=[h,m];
+  $("#addn").textContent="Added “"+k+"”. It now works in the translator, dictionary and flashcards.";
+  ["#ke","#kh","#km"].forEach(x=>$(x).value="");search();
+};
+$("#q").oninput=search;
+$("#exp").onclick=()=>{
+  const data={saved,custom:sv("custom",{})},a=el("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));
+  a.download="bhashabridge-words.json";a.click();URL.revokeObjectURL(a.href);toast("Exported");
+};
+$("#imp").onchange=async e=>{
+  try{
+    const d=JSON.parse(await e.target.files[0].text());
+    if(d.custom){const c={...sv("custom",{}),...d.custom};st("custom",c);Object.assign(G,c)}
+    if(Array.isArray(d.saved)){saved=[...new Set([...saved,...d.saved])];st("saved",saved)}
+    $("#sc").textContent=saved.length;drawSaved();search();toast("Imported");
+  }catch(x){toast("That file could not be read. Use a file exported from this app")}
+  e.target.value="";
+};
+$("#wipe").onclick=()=>{if(saved.length&&confirm("Remove all saved words?")){saved=[];st("saved",saved);$("#sc").textContent=0;drawSaved()}};
+
+/* theme + network */
+const modes=["auto","light","dark"];let mode=sv("theme","auto");
+function applyTheme(){
+  const dark=mode==="dark"||(mode==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
+  document.documentElement.dataset.theme=dark?"dark":"light";
+  $("#theme").textContent="Theme: "+mode[0].toUpperCase()+mode.slice(1);
+}
+$("#theme").onclick=()=>{mode=modes[(modes.indexOf(mode)+1)%3];st("theme",mode);applyTheme()};
+matchMedia("(prefers-color-scheme:dark)").addEventListener("change",applyTheme);
+function net(){const e=$("#net"),on=navigator.onLine;e.textContent=on?"Online":"Offline mode";e.classList.toggle("off",!on)}
+addEventListener("online",net);addEventListener("offline",net);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#pop").classList.remove("show")});
+if("speechSynthesis" in window)speechSynthesis.getVoices();
+
+applyTheme();net();search();drawSaved();$("#sc").textContent=saved.length;
+</script>
+</body>
+</html>
